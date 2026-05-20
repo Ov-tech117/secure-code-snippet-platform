@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Welcome Back</h2>
+        <p style="color: #666; margin-top: 0.5rem;">Login to access your secure code snippets</p>
+    </div>
+    
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(placeholder="Enter your email") }}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <small style="color: #dc3545;">{{ error }}</small>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(placeholder="Enter your password") }}
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <small style="color: #dc3545;">{{ error }}</small>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            {{ form.submit(class="btn btn-primary") }}
+            <span style="color: #666;">or</span>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Create new account</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

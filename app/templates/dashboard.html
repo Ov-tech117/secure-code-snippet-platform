@@ -1,0 +1,44 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Welcome, {{ current_user.username }}! 👋</h2>
+        <p style="color: #666; margin-top: 0.5rem;">Your secure code snippet dashboard</p>
+    </div>
+    
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('snippets.new_snippet') }}" class="btn btn-primary" style="background: #28a745;">➕ Create New Snippet</a>
+        <a href="{{ url_for('snippets.my_snippets') }}" class="btn btn-primary">📋 My Snippets</a>
+    </div>
+    
+    <div class="grid">
+        <div class="card" style="text-align: center;">
+            <h3>📝 Total Snippets</h3>
+            <p style="font-size: 2rem; margin: 1rem 0;">{{ snippet_count }}</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <h3>👁️ Total Views</h3>
+            <p style="font-size: 2rem; margin: 1rem 0;">0</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <h3>🔒 Security Score</h3>
+            <p style="font-size: 2rem; margin: 1rem 0;">100%</p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>📋 Your Recent Snippets</h3>
+        {% if recent_snippets %}
+            {% for snippet in recent_snippets %}
+                <div style="border-bottom: 1px solid #eee; padding: 1rem 0;">
+                    <h4><a href="{{ url_for('snippets.view_snippet', snippet_id=snippet.id) }}">{{ snippet.title }}</a></h4>
+                    <p style="color: #666; font-family: monospace;">{{ snippet.code[:100] }}...</p>
+                    <small>Language: {{ snippet.language }} | Created: {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #666; margin-top: 1rem;">No snippets yet. Click "Create New Snippet" to get started!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

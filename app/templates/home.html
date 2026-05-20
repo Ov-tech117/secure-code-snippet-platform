@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">🔒 Secure CodeShare</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 2rem;">Share, discover, and secure your code snippets with built-in security analysis</p>
+    {% if not current_user.is_authenticated %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary" style="background: white; color: #667eea;">Get Started</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary" style="background: rgba(255,255,255,0.2);">Login</a>
+        </div>
+    {% else %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="background: white; color: #667eea;">Go to Dashboard</a>
+    {% endif %}
+</div>
+
+<div class="grid" style="margin-top: 2rem;">
+    <div class="card">
+        <h3>🔐 Security Analysis</h3>
+        <p>Automatic detection of security smells and vulnerabilities in your code snippets.</p>
+    </div>
+    <div class="card">
+        <h3>📚 Easy Sharing</h3>
+        <p>Share code snippets securely with role-based access control and audit logging.</p>
+    </div>
+    <div class="card">
+        <h3>🔍 Smart Search</h3>
+        <p>Find the right code snippet quickly with full-text search and language filters.</p>
+    </div>
+</div>
+{% endblock %}

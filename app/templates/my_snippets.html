@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>My Snippets</h2>
+        <p>All your code snippets in one place</p>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+        <a href="{{ url_for('snippets.new_snippet') }}" class="btn btn-primary" style="background: #28a745;">➕ Create New Snippet</a>
+    </div>
+    
+    {% if snippets %}
+        {% for snippet in snippets %}
+            <div style="border-bottom: 1px solid #eee; padding: 1rem 0;">
+                <h4><a href="{{ url_for('snippets.view_snippet', snippet_id=snippet.id) }}">{{ snippet.title }}</a></h4>
+                <p style="color: #666;">{{ snippet.code[:100] }}...</p>
+                <small>Language: {{ snippet.language }} | Created: {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #666;">No snippets yet. Click "Create New Snippet" to get started!</p>
+    {% endif %}
+</div>
+{% endblock %}

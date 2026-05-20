@@ -1,0 +1,23 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ snippet.title }}</h2>
+        <p>
+            <strong>Language:</strong> {{ snippet.language }} | 
+            <strong>Created:</strong> {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }} |
+            <strong>Author:</strong> {{ snippet.author.username }}
+        </p>
+    </div>
+    
+    <h3>Code:</h3>
+    <div class="code-snippet">
+        <pre><code>{{ snippet.code }}</code></pre>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="#" class="btn btn-danger" style="background: #dc3545;">Delete</a>
+    </div>
+</div>
+{% endblock %}

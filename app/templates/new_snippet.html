@@ -1,0 +1,104 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Create New Snippet</h2>
+        <p>Share your code with built-in security analysis</p>
+    </div>
+    
+    <form method="POST" id="snippetForm">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(placeholder="Enter a descriptive title", class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.language.label }}
+            {{ form.language(class="form-control", id="languageSelect") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.code.label }}
+            {{ form.code(rows=15, placeholder="Paste your code here...", class="form-control", style="font-family: monospace;", id="codeArea") }}
+        </div>
+        
+        <div id="securityPreview" style="margin: 1rem 0; padding: 1rem; background: #f0f2f5; border-radius: 10px; display: none;">
+            <h4 style="margin-bottom: 0.75rem;">🔒 Security Analysis Preview</h4>
+            <div id="previewResults"></div>
+        </div>
+        
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+    const codeArea = document.getElementById('codeArea');
+    const languageSelect = document.getElementById('languageSelect');
+    const securityPreview = document.getElementById('securityPreview');
+    const previewResults = document.getElementById('previewResults');
+    
+    let previewTimeout;
+    
+    codeArea.addEventListener('input', function() {
+        clearTimeout(previewTimeout);
+        previewTimeout = setTimeout(previewSecurity, 800);
+    });
+    
+    function previewSecurity() {
+        const code = codeArea.value;
+        const language = languageSelect.value;
+        
+        if (code.length < 20) {
+            securityPreview.style.display = 'none';
+            return;
+        }
+        
+        fetch('/snippets/preview-security', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({code: code, language: language})
+        })
+        .then(response => response.json())
+        .then(data => {
+            securityPreview.style.display = 'block';
+            if (data.has_issues) {
+                let scoreColor = data.score >= 80 ? '#10b981' : (data.score >= 50 ? '#f59e0b' : '#ef4444');
+                previewResults.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span><strong>Security Score:</strong></span>
+                        <span style="font-size: 1.5rem; font-weight: bold; color: ${scoreColor};">${data.score}%</span>
+                    </div>
+                    <div style="margin-bottom: 0.75rem;">
+                        <strong>Severity:</strong> 
+                        <span style="color: ${data.severity === 'Critical' ? '#ef4444' : (data.severity === 'High' ? '#f59e0b' : '#3b82f6')}">${data.severity}</span>
+                    </div>
+                    <div>
+                        <strong>Issues Found (${data.issues.length}):</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.25rem;">
+                            ${data.issues.map(issue => `<li style="margin-bottom: 0.5rem;"><span style="color: #ef4444;">⚠️</span> <strong>${issue.type}:</strong> ${issue.message}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                previewResults.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span><strong>Security Score:</strong></span>
+                        <span style="font-size: 1.5rem; font-weight: bold; color: #10b981;">${data.score}%</span>
+                    </div>
+                    <div style="color: #10b981;">
+                        ✅ No security issues detected!
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock %}
