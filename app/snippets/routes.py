@@ -84,3 +84,31 @@ def view_snippet(snippet_id):
 def my_snippets():
     snippets = Snippet.query.filter_by(user_id=current_user.id).order_by(Snippet.created_at.desc()).all()
     return render_template('my_snippets.html', snippets=snippets)
+
+# DELETE ROUTE - ADD THIS
+@snippets_bp.route('/delete/<int:snippet_id>')
+@login_required
+def delete_snippet(snippet_id):
+    snippet = Snippet.query.get_or_404(snippet_id)
+    
+    # Check if user owns the snippet or is admin
+    if snippet.user_id != current_user.id and current_user.role != 'admin':
+        flash('You do not have permission to delete this snippet.', 'danger')
+        return redirect(url_for('snippets.view_snippet', snippet_id=snippet.id))
+    
+    # Delete the snippet
+    db.session.delete(snippet)
+    db.session.commit()
+    
+    # Log the deletion
+    log = AuditLog(
+        user_id=current_user.id,
+        action='delete_snippet',
+        snippet_id=snippet.id,
+        ip_address=request.remote_addr
+    )
+    db.session.add(log)
+    db.session.commit()
+    
+    flash('Snippet deleted successfully!', 'success')
+    return redirect(url_for('snippets.my_snippets'))

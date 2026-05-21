@@ -13,9 +13,34 @@
     {% if snippets %}
         {% for snippet in snippets %}
             <div style="border-bottom: 1px solid #eee; padding: 1rem 0;">
-                <h4><a href="{{ url_for('snippets.view_snippet', snippet_id=snippet.id) }}">{{ snippet.title }}</a></h4>
-                <p style="color: #666;">{{ snippet.code[:100] }}...</p>
-                <small>Language: {{ snippet.language }} | Created: {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <h4><a href="{{ url_for('snippets.view_snippet', snippet_id=snippet.id) }}">{{ snippet.title }}</a></h4>
+                        <p style="color: #666; font-family: monospace; margin: 0.5rem 0;">{{ snippet.code[:100] }}...</p>
+                        <small>
+                            Language: {{ snippet.language }} | 
+                            Security Score: 
+                            <span style="color: {% if snippet.security_score >= 80 %}#10b981{% elif snippet.security_score >= 50 %}#f59e0b{% else %}#ef4444{% endif %}; font-weight: bold;">
+                                {{ snippet.security_score }}%
+                            </span> |
+                            Created: {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </small>
+                        {% if snippet.tags %}
+                            <div style="margin-top: 0.5rem;">
+                                {% for tag in snippet.tags %}
+                                    <span style="display: inline-block; background: #e0e7ff; color: #3730a3; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.7rem; margin-right: 0.3rem;">#{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <a href="{{ url_for('snippets.delete_snippet', snippet_id=snippet.id) }}" 
+                           onclick="return confirm('Delete "{{ snippet.title }}"?\n\nThis action cannot be undone!')"
+                           style="background: #dc2626; color: white; padding: 0.25rem 0.75rem; border-radius: 5px; text-decoration: none; font-size: 0.8rem; display: inline-block;">
+                            🗑️ Delete
+                        </a>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     {% else %}
