@@ -1,4 +1,4 @@
-﻿from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
@@ -27,4 +27,5 @@ class SnippetForm(FlaskForm):
         ('sql', 'SQL'),
         ('text', 'Plain Text')
     ])
+    tags = StringField('Tags (comma-separated)', validators=[Length(max=200)])   # ← ADD THIS LINE
     submit = SubmitField('Save Snippet')
