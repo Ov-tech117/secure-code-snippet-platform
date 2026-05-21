@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Search Results</h2>
+        <p>Found {{ results|length }} snippet(s) for "{{ query }}"</p>
+        {% if language %}
+            <p>Filtered by language: {{ language }}</p>
+        {% endif %}
+    </div>
+    
+    {% if results %}
+        {% for snippet in results %}
+            <div style="border-bottom: 1px solid #eee; padding: 1.5rem 0;">
+                <h3><a href="{{ url_for('snippets.view_snippet', snippet_id=snippet.id) }}" style="color: #2563eb; text-decoration: none;">{{ snippet.title }}</a></h3>
+                <div style="background: #1e1e2e; color: #e2e8f0; padding: 0.75rem; border-radius: 8px; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; overflow-x: auto;">
+                    <pre style="margin: 0;">{{ snippet.code[:200] }}{% if snippet.code|length > 200 %}...{% endif %}</pre>
+                </div>
+                <small>
+                    Language: {{ snippet.language }} | 
+                    Security Score: 
+                    <span style="color: {% if snippet.security_score >= 80 %}#10b981{% elif snippet.security_score >= 50 %}#f59e0b{% else %}#ef4444{% endif %}; font-weight: bold;">
+                        {{ snippet.security_score }}%
+                    </span> |
+                    Created: {{ snippet.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 2rem;">
+            <p>No snippets found for "{{ query }}".</p>
+            <p>Try a different search term or <a href="{{ url_for('snippets.new_snippet') }}">create a new snippet</a>.</p>
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 1.5rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

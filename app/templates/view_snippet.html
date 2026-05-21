@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+﻿ {% extends "base.html" %}
 {% block content %}
 <div class="card">
     <div class="card-header">
@@ -10,14 +10,71 @@
         </p>
     </div>
     
+    {% if security_results %}
+    <div style="margin-bottom: 1.5rem; padding: 1rem; background: {% if security_results.score >= 80 %}#d4edda{% elif security_results.score >= 50 %}#fff3cd{% else %}#f8d7da{% endif %}; border-radius: 5px;">
+        <h3>🔒 Security Report</h3>
+        <p><strong>Security Score:</strong> {{ security_results.score }}%</p>
+        <p><strong>Overall Severity:</strong> {{ security_results.severity }}</p>
+        {% if security_results.has_issues %}
+            <p><strong>Issues Found ({{ security_results.issues|length }}):</strong></p>
+            <ul>
+                {% for issue in security_results.issues %}
+                    <li><strong>{{ issue.type }}:</strong> {{ issue.message }} <span style="color: {% if issue.severity == 'Critical' %}red{% elif issue.severity == 'High' %}orange{% else %}yellow{% endif %};">({{ issue.severity }})</span></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>✅ No security issues detected!</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <!-- Tags Section -->
+    {% if snippet.tags %}
+    <div style="margin: 1rem 0; padding: 0.5rem 0;">
+        <strong style="font-size: 0.9rem;">🏷️ Tags:</strong>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+            {% for tag in snippet.tags %}
+                <a href="{{ url_for('search_by_tag', tag_name=tag.name) }}" 
+                   style="display: inline-block; background: #e0e7ff; color: #3730a3; 
+                          padding: 0.25rem 0.75rem; border-radius: 20px; text-decoration: none; 
+                          font-size: 0.8rem; transition: all 0.2s;">
+                    #{{ tag.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
     <h3>Code:</h3>
     <div class="code-snippet">
         <pre><code>{{ snippet.code }}</code></pre>
     </div>
     
+    <!-- Share Section -->
+    <div style="margin: 1rem 0; padding: 1rem; background: #f0fdf4; border-radius: 10px; border: 1px solid #10b981;">
+        <strong>🔗 Share this snippet:</strong>
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+            <input type="text" value="{{ request.url }}" id="shareLink" style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; font-size: 0.8rem;" readonly>
+            <button onclick="copyToClipboard()" style="padding: 0.5rem 1rem; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer;">📋 Copy Link</button>
+        </div>
+        <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+            Anyone with this link can view this snippet.
+        </p>
+    </div>
+    
     <div style="margin-top: 2rem;">
         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
-        <a href="#" class="btn btn-danger" style="background: #dc3545;">Delete</a>
+        <a href="{{ url_for('snippets.my_snippets') }}" class="btn btn-primary">My Snippets</a>
     </div>
 </div>
+
+<script>
+function copyToClipboard() {
+    const copyText = document.getElementById("shareLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("✅ Link copied to clipboard!\n\nShare this link with anyone.");
+}
+</script>
 {% endblock %}

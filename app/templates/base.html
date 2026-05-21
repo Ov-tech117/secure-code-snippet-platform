@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,6 +36,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .logo {
@@ -52,10 +54,65 @@
             color: #1d4ed8;
         }
 
+        /* Search Container */
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            min-width: 250px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-language {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .btn-search {
+            padding: 0.5rem 1rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-search:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
         .nav-links {
             display: flex;
             gap: 1rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
@@ -325,7 +382,19 @@
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
-                gap: 1rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .search-form {
+                width: 100%;
+            }
+            
+            .search-input {
+                min-width: 100px;
             }
             
             .container {
@@ -334,6 +403,10 @@
             
             .grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                justify-content: center;
             }
         }
     </style>
@@ -344,6 +417,25 @@
             <a href="{{ url_for('home') }}" class="logo">
                 🔒 Secure CodeShare
             </a>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Search snippets by title or code..." class="search-input">
+                    <select name="language" class="search-language">
+                        <option value="">All Languages</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="php">PHP</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="sql">SQL</option>
+                    </select>
+                    <button type="submit" class="btn-search">🔍 Search</button>
+                </form>
+            </div>
+            
             <div class="nav-links">
                 <a href="{{ url_for('home') }}">Home</a>
                 {% if current_user.is_authenticated %}

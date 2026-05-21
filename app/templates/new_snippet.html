@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+﻿ {% extends "base.html" %}
 {% block content %}
 <div class="card">
     <div class="card-header">
@@ -17,6 +17,12 @@
         <div class="form-group">
             {{ form.language.label }}
             {{ form.language(class="form-control", id="languageSelect") }}
+        </div>
+        
+        <div class="form-group">
+            {{ form.tags.label }}
+            {{ form.tags(placeholder="e.g., authentication, security, database, api", class="form-control") }}
+            <small style="color: #666; display: block; margin-top: 0.25rem;">Separate tags with commas (e.g., python, security, login)</small>
         </div>
         
         <div class="form-group">

@@ -2,6 +2,23 @@
 from flask_login import UserMixin
 from datetime import datetime
 
+# Association table for many-to-many relationship between snippets and tags
+snippet_tags = db.Table('snippet_tags',
+    db.Column('snippet_id', db.Integer, db.ForeignKey('snippets.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+)
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    
+    snippets = db.relationship('Snippet', secondary=snippet_tags, back_populates='tags')
+    
+    def __repr__(self):
+        return f'<Tag {self.name}>'
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
@@ -26,6 +43,9 @@ class Snippet(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     security_score = db.Column(db.Integer, default=100)
+    
+    # Relationship with tags
+    tags = db.relationship('Tag', secondary=snippet_tags, back_populates='snippets')
 
     author = db.relationship('User', backref='snippets')
 

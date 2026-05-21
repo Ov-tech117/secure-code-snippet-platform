@@ -2,7 +2,7 @@
 from flask_login import login_required, current_user
 from app import db
 from app.snippets import snippets_bp
-from models import Snippet, AuditLog
+from models import Snippet, AuditLog, Tag
 from forms import SnippetForm
 from app.security.analyzer import SecurityAnalyzer
 import json
@@ -26,6 +26,17 @@ def new_snippet():
             security_score=security_results['score']
         )
         db.session.add(snippet)
+        
+        # Process tags
+        if form.tags.data:
+            tag_names = [t.strip().lower() for t in form.tags.data.split(',') if t.strip()]
+            for tag_name in tag_names:
+                tag = Tag.query.filter_by(name=tag_name).first()
+                if not tag:
+                    tag = Tag(name=tag_name)
+                    db.session.add(tag)
+                snippet.tags.append(tag)
+        
         db.session.commit()
         
         log = AuditLog(
