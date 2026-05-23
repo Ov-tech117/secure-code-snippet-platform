@@ -68,8 +68,8 @@ def preview_security():
     results = analyzer.analyze()
     return jsonify(results)
 
+# FIXED: Removed @login_requirement so shared links work for anyone
 @snippets_bp.route('/view/<int:snippet_id>')
-@login_required
 def view_snippet(snippet_id):
     snippet = Snippet.query.get_or_404(snippet_id)
     
@@ -85,7 +85,7 @@ def my_snippets():
     snippets = Snippet.query.filter_by(user_id=current_user.id).order_by(Snippet.created_at.desc()).all()
     return render_template('my_snippets.html', snippets=snippets)
 
-# DELETE ROUTE - ADD THIS
+# DELETE ROUTE
 @snippets_bp.route('/delete/<int:snippet_id>')
 @login_required
 def delete_snippet(snippet_id):
