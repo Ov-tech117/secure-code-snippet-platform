@@ -31,7 +31,7 @@
         </div>
         
         <div id="securityPreview" style="margin: 1rem 0; padding: 1rem; background: #f0f2f5; border-radius: 10px; display: none;">
-            <h4 style="margin-bottom: 0.75rem;">🔒 Security Analysis Preview</h4>
+            <h4 style="margin-bottom: 0.75rem;"> Security Analysis Preview</h4>
             <div id="previewResults"></div>
         </div>
         
@@ -86,7 +86,7 @@
                     <div>
                         <strong>Issues Found (${data.issues.length}):</strong>
                         <ul style="margin-top: 0.5rem; margin-left: 1.25rem;">
-                            ${data.issues.map(issue => `<li style="margin-bottom: 0.5rem;"><span style="color: #ef4444;">⚠️</span> <strong>${issue.type}:</strong> ${issue.message}</li>`).join('')}
+                            ${data.issues.map(issue => `<li style="margin-bottom: 0.5rem;"><span style="color: #ef4444;"></span> <strong>${issue.type}:</strong> ${issue.message}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -97,7 +97,7 @@
                         <span style="font-size: 1.5rem; font-weight: bold; color: #10b981;">${data.score}%</span>
                     </div>
                     <div style="color: #10b981;">
-                        ✅ No security issues detected!
+                         No security issues detected!
                     </div>
                 `;
             }

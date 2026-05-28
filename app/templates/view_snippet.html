@@ -12,7 +12,7 @@
     
     {% if security_results %}
     <div style="margin-bottom: 1.5rem; padding: 1rem; background: {% if security_results.score >= 80 %}#d4edda{% elif security_results.score >= 50 %}#fff3cd{% else %}#f8d7da{% endif %}; border-radius: 5px;">
-        <h3>🔒 Security Report</h3>
+        <h3> Security Report</h3>
         <p><strong>Security Score:</strong> {{ security_results.score }}%</p>
         <p><strong>Overall Severity:</strong> {{ security_results.severity }}</p>
         {% if security_results.has_issues %}
@@ -23,7 +23,7 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <p>✅ No security issues detected!</p>
+            <p> No security issues detected!</p>
         {% endif %}
     </div>
     {% endif %}
@@ -31,7 +31,7 @@
     <!-- Tags Section -->
     {% if snippet.tags %}
     <div style="margin: 1rem 0; padding: 0.5rem 0;">
-        <strong style="font-size: 0.9rem;">🏷️ Tags:</strong>
+        <strong style="font-size: 0.9rem;"> Tags:</strong>
         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
             {% for tag in snippet.tags %}
                 <a href="{{ url_for('search_by_tag', tag_name=tag.name) }}" 
@@ -67,9 +67,9 @@
         <a href="{{ url_for('snippets.my_snippets') }}" class="btn btn-primary">My Snippets</a>
         <a href="{{ url_for('snippets.delete_snippet', snippet_id=snippet.id) }}" 
            class="btn btn-danger" 
-           onclick="return confirm('⚠️ Are you sure you want to delete this snippet?\n\nThis action cannot be undone!');"
+           onclick="return confirm(' Are you sure you want to delete this snippet?\n\nThis action cannot be undone!');"
            style="background: #dc2626; color: white; padding: 0.625rem 1.25rem; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-            🗑️ Delete Snippet
+             Delete Snippet
         </a>
     </div>
 </div>
@@ -80,7 +80,7 @@ function copyToClipboard() {
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    alert("✅ Link copied to clipboard!\n\nShare this link with anyone.");
+    alert(" Link copied to clipboard!\n\nShare this link with anyone.");
 }
 </script>
 {% endblock %}
